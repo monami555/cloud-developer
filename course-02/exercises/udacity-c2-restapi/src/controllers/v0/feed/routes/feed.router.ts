@@ -18,13 +18,42 @@ router.get('/', async (req: Request, res: Response) => {
 
 //@TODO
 //Add an endpoint to GET a specific resource by Primary Key
+router.get('/:id', async (req: Request, res: Response) => {
+    const { id } = req.params
+    if(isNaN(id)){
+        res.status(400).send("the id needs to be a number");
+    }
+    const item = await FeedItem.findByPk(id);
+    if (item) {
+        res.status(200).send(item);
+    } else {
+        res.status(404).send();
+    }
+});
 
 // update a specific resource
-router.patch('/:id', 
+router.patch('/:id',
     requireAuth, 
     async (req: Request, res: Response) => {
-        //@TODO try it yourself
-        res.send(500).send("not implemented")
+        const { id } = req.params
+        if(isNaN(id)){
+            res.status(400).send("the id needs to be a number");
+        }
+        const { url } = req.body
+        const { caption } = req.body
+        var patch = {};
+        if (caption){
+          patch.caption = caption;
+        }
+        if(url){
+          patch.url = url;
+        }
+        const [numberOfAffectedRows, affectedRows] = await FeedItem.update(patch, {where: {id:id}, returning: true});
+        if (numberOfAffectedRows>0) {
+            res.status(200).send(affectedRows);
+        } else {
+            res.status(404).send();
+        }
 });
 
 
