@@ -15,3 +15,9 @@ export const divide = (a: number, b: number) => {
 // it should return one string combining the two strings.
 // it should throw an error if either of the strings are empty.
 // ensure your function is exported.
+
+export const conc = (s1: string, s2: string) => {
+    if(!s1) { throw new Error('s1 missing') }
+    if(!s2) { throw new Error('s2 missing') }
+    return s1+s2;
+    }
