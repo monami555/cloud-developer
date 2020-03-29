@@ -8,6 +8,8 @@ import { NextFunction } from 'connect';
 
 import * as EmailValidator from 'email-validator';
 
+import { config } from '../../../../config/config';
+
 const router: Router = Router();
 
 async function generatePassword(plainTextPassword: string): Promise<string> {
