@@ -41,7 +41,7 @@ router.patch('/:id',
         }
         const { url } = req.body
         const { caption } = req.body
-        var patch = {};
+        var patch : any = {};
         if (caption){
           patch.caption = caption;
         }
