@@ -12,9 +12,6 @@
     "dueDate": {
       "type": "string"
     },
-    "attachmentUrl": {
-      "type": "string"
-    },
     "done": {
       "type": "boolean"
     },

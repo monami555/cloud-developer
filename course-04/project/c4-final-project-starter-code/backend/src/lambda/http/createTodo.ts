@@ -19,7 +19,7 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
     name: newTodo.name,
     dueDate: newTodo.dueDate,
     done: false,
-    attachmentUrl: newTodo.attachmentUrl
+    attachmentUrl: `https://${process.env.TODO_ATTACHMENTS_S3}.s3.amazonaws.com/${todoId}`
   }
 
   await docClient.put({
