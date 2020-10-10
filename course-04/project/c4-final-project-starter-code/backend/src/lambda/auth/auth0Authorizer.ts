@@ -56,6 +56,17 @@ export const handler = async (
   }
 }
 
+const getCert = async(url) => {
+     logger.info('jwksUrl: ' + url)
+     const response = await fetch(url)
+     logger.info('Key set response arrived')
+     const json = await response.json()
+     logger.info(json)
+     const cert = json.keys[0].x5c[0]
+     logger.info('Fetched RS256 certificate', cert)
+     return cert
+}
+
 async function verifyToken(authHeader: string): Promise<JwtPayload> {
   const token = getToken(authHeader)
 
@@ -82,15 +93,4 @@ function getToken(authHeader: string): string {
   const token = split[1]
   logger.info('token: '+token)
   return token
-}
-
-const getCert = async(url) => {
-     logger.info('jwksUrl: ' + url)
-     const response = await fetch(url)
-     logger.info('Key set response arrived')
-     const json = await response.json()
-     logger.info(json)
-     const cert = json.keys[0].x5c[0]
-     logger.info('Fetched RS256 certificate', cert)
-     return cert
 }
