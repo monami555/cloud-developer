@@ -38,7 +38,7 @@ export const handler = async (
       }
     }
   } catch (e) {
-    logger.error('User not authorized', { error: e.message })
+        logger.error('User not authorized kuuuuu', { error: e.message, errorObject: e })
 
     return {
       principalId: 'user',
@@ -58,14 +58,11 @@ export const handler = async (
 
 async function verifyToken(authHeader: string): Promise<JwtPayload> {
   const token = getToken(authHeader)
-  const jwt: Jwt = decode(token, { complete: true }) as Jwt
 
-  const response = await fetch(jwksUrl)
-  const keys = await response.json()
-  const cert = keys[0].x5c[0]
+  logger.info('Got token from header: ' + token)
 
-  logger.info('Fetched RS256 certificate', cert)
-
+  //const jwt: Jwt = decode(token, { complete: true }) as Jwt
+  const cert = await getCert(jwksUrl)
   return verify(
      token,           // Token from an HTTP header to validate
      cert,   // A certificate copied from Auth0 website
@@ -74,13 +71,26 @@ async function verifyToken(authHeader: string): Promise<JwtPayload> {
 }
 
 function getToken(authHeader: string): string {
+  logger.info('a: '+authHeader)
   if (!authHeader) throw new Error('No authentication header')
-
+  logger.info('b')
   if (!authHeader.toLowerCase().startsWith('bearer '))
     throw new Error('Invalid authentication header')
-
+  logger.info('c')
   const split = authHeader.split(' ')
+  logger.info('d')
   const token = split[1]
-
+  logger.info('token: '+token)
   return token
+}
+
+const getCert = async(url) => {
+     logger.info('jwksUrl: ' + url)
+     const response = await fetch(url)
+     logger.info('Key set response arrived')
+     const json = await response.json()
+     logger.info(json)
+     const cert = json.keys[0].x5c[0]
+     logger.info('Fetched RS256 certificate', cert)
+     return cert
 }
