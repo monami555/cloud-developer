@@ -1,8 +1,9 @@
 import 'source-map-support/register'
-
+import { createLogger } from '../../utils/logger'
 import { APIGatewayProxyEvent, APIGatewayProxyResult, APIGatewayProxyHandler } from 'aws-lambda'
-
 import * as AWS  from 'aws-sdk'
+
+const logger = createLogger('auth')
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   const todoId = event.pathParameters.todoId
@@ -17,6 +18,10 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
     Expires: process.env.SIGNED_URL_EXPIRATION  // A URL is only valid for this time
   })
 
+  logger.info('Created signed url', {
+    presignedUrl
+  })
+
   return {
     statusCode: 201,
     headers: {
@@ -24,7 +29,7 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
     },
     body: JSON.stringify({
       todoId,
-      presignedUrl: presignedUrl
+      presignedUrl
     })
   }
 }
