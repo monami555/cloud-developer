@@ -64,6 +64,8 @@ async function verifyToken(authHeader: string): Promise<JwtPayload> {
   const keys = await response.json()
   const cert = keys[0].x5c[0]
 
+  logger.info('Fetched RS256 certificate', cert)
+
   return verify(
      token,           // Token from an HTTP header to validate
      cert,   // A certificate copied from Auth0 website
