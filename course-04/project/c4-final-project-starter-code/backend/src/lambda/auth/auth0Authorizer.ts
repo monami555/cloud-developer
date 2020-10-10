@@ -56,7 +56,7 @@ export const handler = async (
   }
 }
 
-const getCert = async(url) => {
+async getCert (url) => {
      logger.info('jwksUrl: ' + url)
      const response = await fetch(url)
      logger.info('Key set response arrived')
