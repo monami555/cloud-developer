@@ -11,9 +11,13 @@ const logger = createLogger('auth')
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   const todoId = event.pathParameters.todoId
 
+  logger.info('Deleting TODO', {
+    todoId
+  })
+
   await docClient.delete({
       TableName: todoTable,
-      Key: { todoId }
+      Key: { todoId: todoId }
   }).promise()
 
   logger.info('TODO deleted', {
