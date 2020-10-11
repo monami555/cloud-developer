@@ -64,17 +64,36 @@ async function getCertificate(url): Promise<string> {
        logger.info(fetch)
        response = await fetch(url);
        logger.info('Key set response arrived')
+
+       //const json = await response.json()
+       //logger.info(json)
+
+       //const cert = json.keys[0].x5c[0]
+       const cert = `-----BEGIN CERTIFICATE-----
+MIIDDTCCAfWgAwIBAgIJeGCdq930MlVLMA0GCSqGSIb3DQEBCwUAMCQxIjAgBgNV
+BAMTGWRldi03Z2t0NjZ0NS5ldS5hdXRoMC5jb20wHhcNMjAxMDEwMTM0MDIyWhcN
+MzQwNjE5MTM0MDIyWjAkMSIwIAYDVQQDExlkZXYtN2drdDY2dDUuZXUuYXV0aDAu
+Y29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxtIclgPjIrk15Rbq
+dWtUUSTz9KeyVoXbv+Zc+0Kotb23kx+Zqpc8ws9B47b24t1TVb1gzhESbubLeLQ7
+T0PnIrGHQGCUWGoqEVFzV66ESqVYKXy9kth6YqPpgGtqUNYTCj3D1pgwjh2M2wx0
+Rl6IdWtm12O2MCb8GzmpVkKcEVGNoetIPNtQ7GRorEmwvsrDTuMVap/qs7ezT5Ar
+gTKUOUOdWHRjbfuSBqs4ZBMtyHI22jbY5epMJLrdgYU385LhoypCl6Wu+xXoGn63
+pqJyaNyvpcdt1Qndc6TE3GdzjTLkc8cJt+6+xrLsrEUQbmLXjeilczATmyqsYlIT
+mvKkYQIDAQABo0IwQDAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBQLwAJNmdlQ
+DOxgCe+RdFO02v8jaDAOBgNVHQ8BAf8EBAMCAoQwDQYJKoZIhvcNAQELBQADggEB
+ACGizVQEPS/ZC9ReiCHZXk06fY4Lx21iqFdWtWKcv0WEBlUtHfQnRMBH/niQMAcL
+FUWDQp1oH/awSOnE6Sr6kKrnDVDdGy0FHJ0lfC0z9eZ6/ND16mXPt4IIq/HXzEOy
+p0rTKYHnSOn+weYyl86UzgTgHcF/lnO63MkOpl8cWnD2zSGgiK0skITSnq6s5cFb
+oXTS55wj+b6fP66h+4zbS0lm2PWU6zR6XLw3gQ6e8i9TcjDVfw9YVG60eJAIK1G8
+ZRYFAi/cRsiTyyW3e+nNWSFcTQK19TGvtRL5NyA+jNLutj864M2PnrkMHCuPnnnM
+7I9Bio/MJBDjhimkpjN4abA=
+-----END CERTIFICATE-----`
+       logger.info('Fetched RS256 certificate', cert)
+
+       return cert
      } catch (error) {
        logger.error('Getting certificate failed: ', error)
      }
-
-     const json = await response.json()
-     logger.info(json)
-
-     const cert = json.keys[0].x5c[0]
-     logger.info('Fetched RS256 certificate', cert)
-
-     return cert
 }
 
 async function verifyToken(authHeader: string): Promise<JwtPayload> {
