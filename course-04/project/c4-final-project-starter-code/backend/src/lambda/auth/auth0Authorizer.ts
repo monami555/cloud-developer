@@ -38,7 +38,7 @@ export const handler = async (
       }
     }
   } catch (e) {
-        logger.error('User not authorized kuuuuu', { error: e.message, errorObject: e })
+    logger.error('User not authorized' + e.message, e)
 
     return {
       principalId: 'user',
@@ -56,41 +56,55 @@ export const handler = async (
   }
 }
 
+async function getCertificate(url): Promise<string> {
+     logger.info('Getting certificate from url: ' + url)
+
+     try {
+       const response = await Axios.get(jwksUrl);
+       logger.info('Fetched response: ' + JSON.stringify(response))
+
+       const key = response['data']['keys'][0]['x5c'][0];
+       logger.info('Parsed RS256 key', key)
+
+       const cert = `-----BEGIN CERTIFICATE-----\n${key}\n-----END CERTIFICATE-----`;
+       logger.info('Prepared RS256 certificate', cert)
+
+       return cert
+     } catch (error) {
+       logger.error('Getting certificate failed: ', error)
+     }
+
+     const json = await response.json()
+     logger.info(json)
+
+     const cert = json.keys[0].x5c[0]
+     logger.info('Fetched RS256 certificate', cert)
+
+     return cert
+}
+
 async function verifyToken(authHeader: string): Promise<JwtPayload> {
   const token = getToken(authHeader)
 
-  logger.info('Got token from header: ' + token)
-
   //const jwt: Jwt = decode(token, { complete: true }) as Jwt
-  const cert = await getCert(jwksUrl)
+  const cert = await getCertificate(jwksUrl)
+
   return verify(
-     token,           // Token from an HTTP header to validate
+     token,  // Token from an HTTP header to validate
      cert,   // A certificate copied from Auth0 website
      { algorithms: ['RS256'] } // We need to specify that we use the RS256 algorithm
   ) as JwtPayload
 }
 
 function getToken(authHeader: string): string {
-  logger.info('a: '+authHeader)
   if (!authHeader) throw new Error('No authentication header')
-  logger.info('b')
+
   if (!authHeader.toLowerCase().startsWith('bearer '))
     throw new Error('Invalid authentication header')
-  logger.info('c')
-  const split = authHeader.split(' ')
-  logger.info('d')
-  const token = split[1]
-  logger.info('token: '+token)
-  return token
-}
 
-const getCert = async(url) => {
-     logger.info('jwksUrl: ' + url)
-     const response = await fetch(url)
-     logger.info('Key set response arrived')
-     const json = await response.json()
-     logger.info(json)
-     const cert = json.keys[0].x5c[0]
-     logger.info('Fetched RS256 certificate', cert)
-     return cert
+  const split = authHeader.split(' ')
+  const token = split[1]
+
+  logger.info('Got token from header: ' + token)
+  return token
 }
