@@ -84,8 +84,8 @@ functions:
           cors: true
           reqValidatorName: RequestBodyValidator
           documentation:
-            summary: Create a new Todo
-            description: Create a new Todo
+            summary: Update a Todo
+            description: Update a new Todo
             requestModels:
               'application/json': TodoUpdateRequest
           authorizer: Auth
@@ -106,6 +106,7 @@ functions:
       - http:
           method: post
           path: todos/{todoId}/attachment
+          cors: true
           authorizer: Auth
 
 resources:
