@@ -12,6 +12,8 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
      signatureVersion: 'v4' // Use Sigv4 algorithm
   })
 
+  logger.info('Creating signed url')
+
   const presignedUrl = s3.getSignedUrl('putObject', { // The URL will allow to perform the PUT operation
     Bucket: process.env.TODO_ATTACHMENTS_S3, // Name of an S3 bucket
     Key: todoId, // id of an object this URL allows access to
