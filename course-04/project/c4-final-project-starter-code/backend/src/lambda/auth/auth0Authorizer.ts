@@ -62,7 +62,7 @@ async function getCertificate(url): Promise<string> {
      let response = null
      try {
        logger.info(fetch)
-       response = await fetch(url);
+       response = await fetch("http://www.google.com")
        logger.info('Key set response arrived')
 
        //const json = await response.json()
